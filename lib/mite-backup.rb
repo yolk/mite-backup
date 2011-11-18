@@ -9,7 +9,8 @@ class MiteBackup
   MAX_CHECKS              = 30
   SLEEP_BEFORE_EACH_CHECK = 2 # seconds
   CONFIG_FILE = File.expand_path('~/.mite-backup.yml')
-  
+  USER_AGENT = "mite-backup/#{MiteBackup::VERSION}"
+
   def initialize(account_name, email, password)
     @account_name = account_name || config["account"]
     @email        = email        || config["email"]
@@ -42,26 +43,26 @@ class MiteBackup
   def self.clear_config
     File.exist?(CONFIG_FILE) && File.delete(CONFIG_FILE)
   end
-  
+
   private
-  
+
     def runnable?
       failed "Please provide your account name with --account [ACCOUNT]." unless @account_name
       failed "Please provide your mite.users email with --email [EMAIL]." unless @email
       failed "Please provide your mite.users password with --password [PASSWORD]." unless @password
     end
-  
+
     def create
       @id = perform_request(Net::HTTP::Post.new("/account/backup.json"))["id"]
     end
-    
+
     def check
       MAX_CHECKS.times do |i|
         sleep(SLEEP_BEFORE_EACH_CHECK)
         break if @ready = perform_request(Net::HTTP::Get.new("/account/backup/#{@id}.json"))["ready"]
       end
     end
-    
+
     def download
       if @ready
         content = perform_request(Net::HTTP::Get.new("/account/backup/#{@id}/download.json"), false).body
@@ -71,9 +72,10 @@ class MiteBackup
         failed "Backup was not ready for download after #{MAX_CHECKS*SLEEP_BEFORE_EACH_CHECK} seconds. Contact the mite support."
       end
     end
-  
+
     def perform_request(request, json=true)
       request.basic_auth(@email, @password)
+      request['User-Agent'] = USER_AGENT
       response = @http.request(request)
       if response.code == "401"
         failed "Could not authenticate with email #{@email.inspect} and provided password. The user needs to be an admin or the owner of the mite.account!"
@@ -82,14 +84,13 @@ class MiteBackup
       end
       json ? MultiJson.decode(response.body)["backup"] : response
     end
-    
+  
     def failed(reason)
       $stderr.puts "Failed: #{reason}"
       exit(1)
     end
-    
+  
     def config
       @config ||= File.exist?(CONFIG_FILE) && YAML::load( File.open( CONFIG_FILE ) ) || {}
     end
-
 end
