@@ -1,6 +1,6 @@
 require "mite-backup/version"
 require "multi_json"
-require "net/http"
+require "net/https"
 require "uri"
 require 'zlib'
 require 'yaml'
@@ -91,7 +91,11 @@ class MiteBackup
     end
 
     def mite
-      @mite ||= Net::HTTP.new(URI.parse("http://#{@account}.mite.yo.lk/").host)
+      @mite ||= begin
+        mite = Net::HTTP.new(URI.parse("https://#{@account}.mite.yo.lk/").host, 443)
+        mite.use_ssl = true
+        mite
+      end
     end
 
     def failed(reason)
