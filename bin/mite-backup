@@ -49,5 +49,8 @@ when 'setup'
   MiteBackup.clear_config if @clear
   MiteBackup.new(@account, @email, @password).setup
 else
+  $stderr.puts "Unknown command #{ARGV[0].inspect}"
+  puts ""
   puts parser.help
+  exit(1)
 end
