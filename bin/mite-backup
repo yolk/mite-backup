@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
 require 'mite-backup'
 require 'optparse'
 
-OptionParser.new do |opts|
+parser = OptionParser.new do |opts|
   opts.banner = "Usage: mite-backup COMMAND [options]"
 
   opts.separator ""
@@ -35,17 +35,19 @@ OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Commands:"
   opts.separator "  get     Download backupfile and ouput xml to STDOUT (Default command)"
-  opts.separator "  config  Set given options on config file ~/.mite-backup.yml. They'll be used with the get commands."
+  opts.separator "  setp    Write given options to config file ~/.mite-backup.yml, so you don't need to repeat the on ever get command."
   opts.separator ""
-end.parse!
+end
+
+parser.parse!
 
 case ARGV[0] || "get"
 when 'get'
   MiteBackup.clear_config if @clear
   MiteBackup.new(@account, @email, @password).run
-when 'config'
+when 'setup'
   MiteBackup.clear_config if @clear
-  MiteBackup.new(@account, @email, @password).store_config
+  MiteBackup.new(@account, @email, @password).setup
 else
   puts parser.help
 end

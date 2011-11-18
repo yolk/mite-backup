@@ -25,7 +25,7 @@ class MiteBackup
     download
   end
 
-  def store_config
+  def setup
     (config["account"] = @account_name) || config.delete("account")
     (config["email"] = @email) || config.delete("email")
     (config["password"] = @password) || config.delete("password")
