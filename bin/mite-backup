@@ -5,6 +5,8 @@ $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
 require 'mite-backup'
 require 'optparse'
 
+@options = {}
+
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: mite-backup COMMAND [options]"
 
@@ -12,19 +14,19 @@ parser = OptionParser.new do |opts|
   opts.separator "Options:"
 
   opts.on("-a", "--account [ACCOUNT]", "your mite account-name (subdomain without .mite.yo.lk)") do |account|
-    @account = account
+    @options["account"] = account
   end
 
   opts.on("-e", "--email [EMAIL]", "mite.user email") do |email|
-    @email = email
+    @options["email"] = email
   end
 
   opts.on("-p", "--password [PASSWORD]", "mite.user password") do |password|
-    @password = password
+    @options["password"] = password
   end
 
   opts.on("-c", "--clear", "Removes all config values from config file.") do
-    @clear = true
+    @options["clear_config"] = true
   end
 
   opts.on("-h", "--help", "Show this message") do
@@ -35,7 +37,7 @@ parser = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Commands:"
   opts.separator "  get     Download backupfile and ouput xml to STDOUT (Default command)"
-  opts.separator "  setp    Write given options to config file ~/.mite-backup.yml, so you don't need to repeat the on ever get command."
+  opts.separator "  setup    Write given options to config file ~/.mite-backup.yml, so you don't need to repeat the on ever get command."
   opts.separator ""
 end
 
@@ -43,11 +45,9 @@ parser.parse!
 
 case ARGV[0] || "get"
 when 'get'
-  MiteBackup.clear_config if @clear
-  MiteBackup.new(@account, @email, @password).run
+  MiteBackup.new(@options).run
 when 'setup'
-  MiteBackup.clear_config if @clear
-  MiteBackup.new(@account, @email, @password).setup
+  MiteBackup.new(@options).setup
 else
   $stderr.puts "Unknown command #{ARGV[0].inspect}"
   puts ""
