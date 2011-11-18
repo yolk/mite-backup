@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
+
+require 'mite-backup'
+require 'optparse'
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: mite-backup COMMAND [options]"
+
+  opts.separator ""
+  opts.separator "Options:"
+
+  opts.on("-a", "--account [ACCOUNT]", "your mite account-name (subdomain without .mite.yo.lk)") do |account|
+    @account = account
+  end
+
+  opts.on("-e", "--email [EMAIL]", "mite.user email") do |email|
+    @email = email
+  end
+
+  opts.on("-p", "--password [PASSWORD]", "mite.user password") do |password|
+    @password = password
+  end
+
+  opts.on("-c", "--clear", "Removes all config values from config file.") do
+    @clear = true
+  end
+
+  opts.on("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+
+  opts.separator ""
+  opts.separator "Commands:"
+  opts.separator "  get     Download backupfile and ouput xml to STDOUT (Default command)"
+  opts.separator "  config  Set given options on config file ~/.mite-backup.yml. They'll be used with the get commands."
+  opts.separator ""
+end.parse!
+
+case ARGV[0] || "get"
+when 'get'
+  MiteBackup.clear_config if @clear
+  MiteBackup.new(@account, @email, @password).run
+when 'config'
+  MiteBackup.clear_config if @clear
+  MiteBackup.new(@account, @email, @password).store_config
+else
+  puts parser.help
+end
