@@ -14,7 +14,7 @@ class MiteBackup
   def initialize(options={})
     @options = options
     self.class.clear_config if options["clear_config"]
-    @account  = options["account"]  || config["account"]
+    @account  = correct_account(options["account"]  || config["account"])
     @email    = options["email"]    || config["email"]
     @password = options["password"] || config["password"]
   end
@@ -105,5 +105,9 @@ class MiteBackup
   
     def config
       @config ||= File.exist?(CONFIG_FILE) && YAML::load( File.open( CONFIG_FILE ) ) || {}
+    end
+
+    def correct_account(account)
+      account.split(/\/\//, 2)[-1].split(/\./, 2)[0] if account
     end
 end
