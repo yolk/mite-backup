@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = MiteBackup::VERSION
   s.authors     = ["Sebastian"]
   s.email       = ["sebastian@yo.lk"]
-  s.homepage    = "http://mite.yo.lk/"
-  s.summary     = %q{Download a backup of your mite account from the command-line.}
-  s.description = %q{Download a backup of your mite account from the command-line.}
+  s.homepage    = "http://mite.yo.lk/en"
+  s.summary     = %q{Download a backup of your mite.account from the command-line.}
+  s.description = %q{Download a backup of your mite.account from the command-line.}
 
   s.rubyforge_project = "mite-backup"
 
