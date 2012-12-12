@@ -30,7 +30,7 @@ class MiteBackup
     (config["account"] = @account) || config.delete("account")
     (config["email"] = @email) || config.delete("email")
     (config["password"] = @password) || config.delete("password")
-    
+
     if config.size == 0
       self.class.clear_config
     else
@@ -67,7 +67,12 @@ class MiteBackup
     def download
       if @ready
         content = perform_request(Net::HTTP::Get.new("/account/backup/#{@id}/download.json"))
-        gz = Zlib::GzipReader.new(StringIO.new(content), :external_encoding => content.encoding)
+        content_str = StringIO.new(content)
+        gz = if RUBY_VERSION =~ /\A1\.8\./
+          Zlib::GzipReader.new(content_str)
+        else
+          Zlib::GzipReader.new(content_str, :external_encoding => content.encoding)
+        end
         puts gz.read
       else
         failed "Backup was not ready for download after #{MAX_CHECKS*SLEEP_BEFORE_EACH_CHECK} seconds. Contact the mite support."
@@ -102,7 +107,7 @@ class MiteBackup
       $stderr.puts "Failed: #{reason}"
       exit(1)
     end
-  
+
     def config
       @config ||= File.exist?(CONFIG_FILE) && YAML::load( File.open( CONFIG_FILE ) ) || {}
     end
