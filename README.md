@@ -5,7 +5,7 @@ Simple command-line tool for downloading a backup in XML of your [mite](http://m
 ## Installation
 
     gem install mite-backup
-    
+
 ## Usage
 
     mite-backup -a [ACCOUNT] -e [EMAIL] -p [PASSWORD]
