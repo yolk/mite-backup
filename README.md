@@ -20,6 +20,6 @@ For further instructions run
 
 ## BlaBla
 
-Copyright (c) 2011 [Yolk](http://yo.lk/) Sebastian Munz & Julia Soergel GbR
+Copyright (c) 2011-2012 [Yolk](http://yo.lk/) Sebastian Munz & Julia Soergel GbR
 
 Beyond that, the implementation is licensed under the MIT License.
