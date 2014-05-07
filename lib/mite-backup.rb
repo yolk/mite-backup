@@ -53,7 +53,9 @@ class MiteBackup
     end
 
     def create
-      @id = parse_json(perform_request(Net::HTTP::Post.new("/account/backup.json")))["id"]
+      @id = parse_json(perform_request(Net::HTTP::Post.new("/account/backup.json")){ |code|
+        "Could not find any account located at #{domain}" if code == "404"
+      })["id"]
     end
 
     def check
@@ -86,7 +88,8 @@ class MiteBackup
       if response.code == "401"
         failed "Could not authenticate with email #{@email.inspect} and provided password. The user needs to be an admin or the owner of the mite.account!"
       elsif !["200", "201"].include?(response.code)
-        failed "mite responded with irregular code #{response.code}"
+        message = block_given? && yield(response.code)
+        failed(message || "mite responded with irregular code #{response.code}")
       end
       response.body
     end
@@ -97,10 +100,14 @@ class MiteBackup
 
     def mite
       @mite ||= begin
-        mite = Net::HTTP.new(URI.parse("https://#{@account}.mite.yo.lk/").host, 443)
+        mite = Net::HTTP.new(URI.parse(domain).host, 443)
         mite.use_ssl = true
         mite
       end
+    end
+
+    def domain
+      "https://#{@account}.mite.yo.lk/"
     end
 
     def failed(reason)
