@@ -13,7 +13,7 @@ parser = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Options:"
 
-  opts.on("-a", "--account [ACCOUNT]", "your mite account-name (subdomain without .mite.yo.lk)") do |account|
+  opts.on("-a", "--account [ACCOUNT-SUBDOMAIN]", "your mite account subdomain (without .mite.yo.lk)") do |account|
     @options["account"] = account
   end
 

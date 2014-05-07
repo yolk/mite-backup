@@ -47,7 +47,7 @@ class MiteBackup
   private
 
     def runnable?
-      failed "Please provide your account name with --account [ACCOUNT]." unless @account
+      failed "Please provide your account subdomain with --account [ACCOUNT-SUBDOMAIN]." unless @account
       failed "Please provide your mite.users email with --email [EMAIL]." unless @email
       failed "Please provide your mite.users password with --password [PASSWORD]." unless @password
     end
