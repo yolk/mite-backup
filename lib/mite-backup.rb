@@ -6,8 +6,8 @@ require 'zlib'
 require 'yaml'
 
 class MiteBackup
-  MAX_CHECKS              = 30
-  SLEEP_BEFORE_EACH_CHECK = 2 # seconds
+  MAX_CHECKS              = 48
+  SLEEP_BEFORE_EACH_CHECK = 5 # seconds
   CONFIG_FILE             = File.expand_path('~/.mite-backup.yml')
   USER_AGENT              = "mite-backup/#{MiteBackup::VERSION}"
 
