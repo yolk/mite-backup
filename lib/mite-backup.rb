@@ -6,7 +6,7 @@ require 'zlib'
 require 'yaml'
 
 class MiteBackup
-  MAX_CHECKS              = 48
+  DEFAULT_WAIT_FOR = 240 # seconds
   SLEEP_BEFORE_EACH_CHECK = 5 # seconds
   CONFIG_FILE             = File.expand_path('~/.mite-backup.yml')
   USER_AGENT              = "mite-backup/#{MiteBackup::VERSION}"
@@ -17,6 +17,9 @@ class MiteBackup
     @account  = correct_account(options["account"]  || config["account"])
     @email    = options["email"]    || config["email"]
     @password = options["password"] || config["password"]
+    @max_checks = options["wait_for"] != DEFAULT_WAIT_FOR ?
+      options["wait_for"] / SLEEP_BEFORE_EACH_CHECK :
+      config["wait_for"] || DEFAULT_WAIT_FOR
   end
 
   def run
@@ -30,6 +33,8 @@ class MiteBackup
     (config["account"] = @account) || config.delete("account")
     (config["email"] = @email) || config.delete("email")
     (config["password"] = @password) || config.delete("password")
+    (config["wait_for"] = @options["wait_for"]) || config.delete("wait_for")
+    config.delete("wait_for") if config["wait_for"] == DEFAULT_WAIT_FOR
 
     if config.size == 0
       self.class.clear_config
@@ -59,7 +64,7 @@ class MiteBackup
     end
 
     def check
-      MAX_CHECKS.times do |i|
+      @max_checks.times do |i|
         sleep(SLEEP_BEFORE_EACH_CHECK)
         @ready = parse_json(perform_request(Net::HTTP::Get.new("/account/backup/#{@id}.json")))["ready"]
         break if @ready
@@ -77,7 +82,7 @@ class MiteBackup
         end
         puts gz.read
       else
-        failed "Backup was not ready for download after #{MAX_CHECKS*SLEEP_BEFORE_EACH_CHECK} seconds. Contact the mite support."
+        failed "Backup was not ready for download after #{@options["wait_for"]} seconds. Contact the mite.support."
       end
     end
 

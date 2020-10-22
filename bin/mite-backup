@@ -5,7 +5,9 @@ $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
 require 'mite-backup'
 require 'optparse'
 
-@options = {}
+@options = {
+  "wait_for" => MiteBackup::DEFAULT_WAIT_FOR
+}
 
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: mite-backup COMMAND [options]"
@@ -13,16 +15,23 @@ parser = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Options:"
 
-  opts.on("-a", "--account [ACCOUNT-SUBDOMAIN]", "your mite account subdomain (without .mite.yo.lk)") do |account|
+  opts.on("-a", "--account ACCOUNT-SUBDOMAIN", "your mite account subdomain (without .mite.yo.lk)") do |account|
     @options["account"] = account
   end
 
-  opts.on("-e", "--email [EMAIL]", "mite.user email") do |email|
+  opts.on("-e", "--email EMAIL", "mite.user email") do |email|
     @options["email"] = email
   end
 
-  opts.on("-p", "--password [PASSWORD]", "mite.user password") do |password|
+  opts.on("-p", "--password PASSWORD", "mite.user password") do |password|
     @options["password"] = password
+  end
+
+  opts.on(
+    "-w", "--wait-for SECONDS", Integer,
+    "Number of seconds to wait for backup to be ready. Defaults to 240 seconds."
+  ) do |seconds|
+    @options["wait_for"] = seconds
   end
 
   opts.on("-c", "--clear", "Removes all config values from config file.") do
@@ -37,7 +46,7 @@ parser = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Commands:"
   opts.separator "  get     Download backupfile and ouput xml to STDOUT (Default command)"
-  opts.separator "  setup    Write given options to config file ~/.mite-backup.yml, so you don't need to repeat them on every get command."
+  opts.separator "  setup   Write given options to config file ~/.mite-backup.yml, so you don't need to repeat them on every get command."
   opts.separator ""
 end
 
