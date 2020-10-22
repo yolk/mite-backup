@@ -37,7 +37,7 @@ parser = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Commands:"
   opts.separator "  get     Download backupfile and ouput xml to STDOUT (Default command)"
-  opts.separator "  setup    Write given options to config file ~/.mite-backup.yml, so you don't need to repeat the on ever get command."
+  opts.separator "  setup    Write given options to config file ~/.mite-backup.yml, so you don't need to repeat them on every get command."
   opts.separator ""
 end
 
