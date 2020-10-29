@@ -1,4 +1,7 @@
-# mite-backup
+mite-backup
+===========
+
+[![Gem Version](https://badge.fury.io/rb/mite-backup.svg)](http://badge.fury.io/rb/mite-backup)
 
 Simple command-line tool for downloading a backup in XML of your [mite](http://mite.yo.lk/en).account.
 
@@ -16,10 +19,10 @@ This will output the backup file in XML to the prompt. You propably want to pipe
 
 For further instructions run
 
-    mite-backup -h
+    mite-backup --help
 
 ## BlaBla
 
-Copyright (c) 2011-2012 [Yolk](http://yo.lk/) Sebastian Munz & Julia Soergel GbR
+Copyright (c) 2011-2020 [Yolk](http://yo.lk/) Sebastian Munz & Julia Soergel GbR
 
 Beyond that, the implementation is licensed under the MIT License.
