@@ -5,9 +5,9 @@ require "mite-backup/version"
 Gem::Specification.new do |s|
   s.name        = "mite-backup"
   s.version     = MiteBackup::VERSION
-  s.authors     = ["Sebastian"]
-  s.email       = ["sebastian@yo.lk"]
-  s.homepage    = "http://mite.yo.lk/en"
+  s.authors     = ["mite GmbH"]
+  s.email       = []
+  s.homepage    = "http://mite.de/en"
   s.summary     = %q{Download a backup of your mite.account from the command-line.}
   s.description = %q{Download a backup of your mite.account from the command-line.}
 

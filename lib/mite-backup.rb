@@ -112,7 +112,7 @@ class MiteBackup
     end
 
     def domain
-      "https://#{@account}.mite.yo.lk/"
+      "https://#{@account}.mite.de/"
     end
 
     def failed(reason)
